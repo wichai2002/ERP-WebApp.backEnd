@@ -1,0 +1,7 @@
+﻿@Yinnaxs_BackEnd_HostAddress = http://localhost:5257
+
+GET {{Yinnaxs_BackEnd_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
+
