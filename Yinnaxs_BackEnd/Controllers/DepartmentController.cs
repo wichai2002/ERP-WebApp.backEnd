@@ -22,7 +22,6 @@ namespace Yinnaxs_BackEnd.Controllers
             _departmentContext = departmentContext;
         }
 
-
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Department>>> GetDepartments()
         {
@@ -30,8 +29,7 @@ namespace Yinnaxs_BackEnd.Controllers
 
             return Ok(department);
         }
-
-
+       
         // GET api/values/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Department>> GetDepartmentById(int id)
@@ -43,11 +41,11 @@ namespace Yinnaxs_BackEnd.Controllers
                 return NotFound();
             }
 
-            return department_one;
+            return Ok(department_one);
         }
 
-        // POST api/values
 
+        // POST api/values
         [HttpPost]
         public async Task<ActionResult<Department>> CreateDepartment(Department department)
         {
@@ -86,7 +84,6 @@ namespace Yinnaxs_BackEnd.Controllers
             }
             return NoContent();
         }
-
 
         // DELETE api/values/5
         [HttpDelete("{id}")]

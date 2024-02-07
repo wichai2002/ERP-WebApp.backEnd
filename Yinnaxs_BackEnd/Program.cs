@@ -9,9 +9,16 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultMySQLConnention");
+// connect MYSQL Server
+var connectionStringMySql = builder.Configuration.GetConnectionString("DefaultMySQLConnention");
+
+// connect DepartmentContext with MySQL Server
 builder.Services.AddDbContext<DepartmentContext>
-    (option => option.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+    (option => option.UseMySql(connectionStringMySql, ServerVersion.AutoDetect(connectionStringMySql)));
+
+// connect RoleContext with MySQL Server
+builder.Services.AddDbContext<RoleContext>
+    (option => option.UseMySql(connectionStringMySql, ServerVersion.AutoDetect(connectionStringMySql)));
 
 var app = builder.Build();
 
