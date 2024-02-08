@@ -37,6 +37,68 @@ namespace Yinnaxs_BackEnd.Controllers
 
             return CreatedAtAction(nameof(GetRoles), new {id = role.role_id, role});
         }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Role>> GetRoleById(int id)
+        {
+            var role_one = await _roleContext.Roles.FindAsync(id);
+
+            if (role_one == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(role_one);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateRole(int id, Role role)
+        {
+            if (id != role.role_id)
+            {
+                return BadRequest();
+            }
+
+            _roleContext.Entry(role).State = EntityState.Modified;
+
+            try
+            {
+                await _roleContext.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!RoleExits(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteRole(int id)
+        {
+            var delete_role = await _roleContext.Roles.FindAsync(id);
+
+            if (delete_role == null)
+            {
+                return BadRequest();
+            }
+
+            _roleContext.Roles.Remove(delete_role);
+            await _roleContext.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        private bool RoleExits(int id)
+        {
+            return _roleContext.Roles.Any(e => e.role_id == id);
+        }
     }
 }
 
