@@ -14,9 +14,9 @@ namespace Yinnaxs_BackEnd.Controllers
     [Route("api/[controller]")]
     public class RoleController : Controller
     {
-        private readonly RoleContext _roleContext;
+        private readonly ApplicationDbContext _roleContext;
 
-        public RoleController(RoleContext roleContext)
+        public RoleController(ApplicationDbContext roleContext)
         {
             _roleContext = roleContext;
         }

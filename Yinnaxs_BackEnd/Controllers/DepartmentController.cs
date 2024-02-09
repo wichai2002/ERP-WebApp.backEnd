@@ -15,9 +15,9 @@ namespace Yinnaxs_BackEnd.Controllers
     [Route("api/[controller]")]
     public class DepartmentController : ControllerBase
     {
-        private readonly DepartmentContext _departmentContext;
+        private readonly ApplicationDbContext _departmentContext;
 
-        public DepartmentController(DepartmentContext departmentContext)
+        public DepartmentController(ApplicationDbContext departmentContext)
         {
             _departmentContext = departmentContext;
         }

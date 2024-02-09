@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Yinnaxs_BackEnd.Models
 {
-	[Table("Departments")]
+	[Table("departments")]
 	public class Department
 	{
         [Key]

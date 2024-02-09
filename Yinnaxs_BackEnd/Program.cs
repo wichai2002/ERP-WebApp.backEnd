@@ -13,12 +13,9 @@ builder.Services.AddSwaggerGen();
 var connectionStringMySql = builder.Configuration.GetConnectionString("DefaultMySQLConnention");
 
 // connect DepartmentContext with MySQL Server
-builder.Services.AddDbContext<DepartmentContext>
+builder.Services.AddDbContext<ApplicationDbContext>
     (option => option.UseMySql(connectionStringMySql, ServerVersion.AutoDetect(connectionStringMySql)));
 
-// connect RoleContext with MySQL Server
-builder.Services.AddDbContext<RoleContext>
-    (option => option.UseMySql(connectionStringMySql, ServerVersion.AutoDetect(connectionStringMySql)));
 
 var app = builder.Build();
 
