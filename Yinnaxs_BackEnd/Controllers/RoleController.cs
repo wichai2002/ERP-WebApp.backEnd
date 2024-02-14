@@ -12,6 +12,7 @@ using Yinnaxs_BackEnd.Models;
 namespace Yinnaxs_BackEnd.Controllers
 {
     [Route("api/[controller]")]
+    [ApiController]
     public class RoleController : Controller
     {
         private readonly ApplicationDbContext _roleContext;

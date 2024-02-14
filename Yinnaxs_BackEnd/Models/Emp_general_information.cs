@@ -14,7 +14,7 @@ namespace Yinnaxs_BackEnd.Models
 		public string? nick_name { set; get; }
 		public int age { get; set; }
 		public string? gender { get; set; }
-		public string? date_of_birth { get; set; }
+		public DateTime date_of_birth { get; set; }
         public string? email { get; set; }
         public string? phone { get; set; }
 		public int role_id { get; set; }
