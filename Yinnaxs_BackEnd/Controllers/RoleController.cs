@@ -30,6 +30,13 @@ namespace Yinnaxs_BackEnd.Controllers
             return Ok(roles); //return 200
         }
 
+        [HttpGet("list")]
+        public async Task<ActionResult<IEnumerable<Role>>> GetRoleListName()
+        {
+            var role = await _roleContext.Roles.Select(r => new { r.role_id, r.position }).ToListAsync();
+            return Ok(role);
+        }
+
         [HttpPost]
         public async Task<ActionResult<Role>> CreateRole(Role role)
         {
