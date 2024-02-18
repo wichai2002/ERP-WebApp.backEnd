@@ -38,7 +38,6 @@ var connectionStringMySql = builder.Configuration.GetConnectionString("DefaultMy
 builder.Services.AddDbContext<ApplicationDbContext>
     (option => option.UseMySql(connectionStringMySql, ServerVersion.AutoDetect(connectionStringMySql)));
 
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

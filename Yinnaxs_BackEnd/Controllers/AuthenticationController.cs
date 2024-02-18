@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
+using System.Text.Json;
 using Yinnaxs_BackEnd.Models;
 using Yinnaxs_BackEnd.Context;
 using Yinnaxs_BackEnd.Utility;
@@ -19,7 +20,13 @@ namespace Yinnaxs_BackEnd.Controllers
     [ApiController]
     public class AuthenticationController : Controller
     {
-        
+
+        private class PlayloadAuthen
+        {
+            public int emp_gen_id { get; set; }
+            public string? authen_token { get; set; }
+        }
+
         private IConfiguration _configuration;
         private ApplicationDbContext _applicationDbContext;
         public AuthenticationController(IConfiguration configuration, ApplicationDbContext applicationDbContext)
@@ -60,8 +67,13 @@ namespace Yinnaxs_BackEnd.Controllers
                     );
 
                 var token = new JwtSecurityTokenHandler().WriteToken(Sectoken);
+                PlayloadAuthen playload = new PlayloadAuthen
+                {
+                    emp_gen_id = hrAccount.emp_gen_id,
+                    authen_token = token.ToString()
+                };
 
-                return Ok(token);
+                return Ok(playload);
             }
             catch (Exception)
             {
@@ -70,5 +82,7 @@ namespace Yinnaxs_BackEnd.Controllers
         }
 
     }
+
+
 }
 

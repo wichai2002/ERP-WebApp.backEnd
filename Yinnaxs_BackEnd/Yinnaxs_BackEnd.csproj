@@ -32,4 +32,7 @@
     <Folder Include="Context\" />
     <Folder Include="Utility\" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Remove="appsettings.Production.json" />
+  </ItemGroup>
 </Project>

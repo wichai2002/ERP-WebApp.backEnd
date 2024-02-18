@@ -27,7 +27,7 @@ namespace Yinnaxs_BackEnd.Controllers
         {
             var roles = await _roleContext.Roles.ToListAsync();
 
-            return Ok(roles);
+            return Ok(roles); //return 200
         }
 
         [HttpPost]
