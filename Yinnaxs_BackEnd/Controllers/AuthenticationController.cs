@@ -41,7 +41,6 @@ namespace Yinnaxs_BackEnd.Controllers
         {
             try
             {
-
                 HashAlgorithm hashAlgorithm = new HashAlgorithm();
                 var account = _applicationDbContext.HrAccounts.Where(s => s.emp_gen_id == hrAccount.emp_gen_id).Single();
 
@@ -62,7 +61,8 @@ namespace Yinnaxs_BackEnd.Controllers
                     (_configuration["Jwt:Issuer"],
                         _configuration["Jwt:Issuer"],
                         null,
-                        expires: DateTime.Now.AddMinutes(60),
+                        //expires: DateTime.Now.AddMinutes(60),
+                        expires: DateTime.Now.AddHours(1),
                         signingCredentials: credentials
                     );
 
