@@ -33,7 +33,7 @@ namespace Yinnaxs_BackEnd.Controllers
         [HttpGet("list")]
         public async Task<ActionResult<IEnumerable<Role>>> GetRoleListName()
         {
-            var role = await _roleContext.Roles.Select(r => new { r.role_id, r.position }).ToListAsync();
+            var role = await _roleContext.Roles.Select(r => new { r.role_id, r.department_id, r.position }).ToListAsync();
             return Ok(role);
         }
 

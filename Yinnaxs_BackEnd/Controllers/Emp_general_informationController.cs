@@ -35,15 +35,16 @@ namespace Yinnaxs_BackEnd.Controllers
         {
             var listResutlt = await _emp_Gen_InformationContext.Emp_General_Information
                  .Join(_emp_Gen_InformationContext.Emp_Personal_Informaion,
-                    gen => gen.emp_gen_id,
-                    per => per.emp_gen_id,
+                    gen => gen.emp_gen_id, per => per.emp_gen_id,
                     (_gen, _per) => new
                     {
                         emp_gen_id = _gen.emp_gen_id,
                         first_name = _gen.first_name,
                         last_name = _gen.last_name,
                         email = _gen.email,
-                        hire_date = _per.hire_date
+                        role_id = _gen.role_id,
+                        hire_date = _per.hire_date,
+                        department_id = 0
                     }
                  ).ToListAsync();
 

@@ -62,7 +62,7 @@ namespace Yinnaxs_BackEnd.Controllers
                         _configuration["Jwt:Issuer"],
                         null,
                         //expires: DateTime.Now.AddMinutes(60),
-                        expires: DateTime.Now.AddHours(1),
+                        expires: DateTime.Now.AddHours(3),
                         signingCredentials: credentials
                     );
 
