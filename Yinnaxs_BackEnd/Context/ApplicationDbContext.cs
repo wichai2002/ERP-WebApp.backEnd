@@ -14,6 +14,8 @@ namespace Yinnaxs_BackEnd.Context
 		public DbSet<Role> Roles { get; set; }
 		public DbSet<Emp_general_information> Emp_General_Information { get; set; }
 		public DbSet<HrAccount> HrAccounts { get; set; }
+
+		public DbSet<Leave> Leaves { get; set; }
 	}
 }
 
