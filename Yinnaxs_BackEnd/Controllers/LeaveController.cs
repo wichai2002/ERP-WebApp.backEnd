@@ -48,5 +48,48 @@ namespace Yinnaxs_BackEnd.Controllers
 
             return Ok(listResult); //return 200
         }
+
+        [HttpGet("day/{id}")]
+        public async Task<ActionResult<IEnumerable<Leave>>> GetLeavesDay(int id)
+        {
+            var leaveday = await _leave.Leavedays.Where(a => a.emp_gen_id == id).ToListAsync();
+
+            return Ok(leaveday); //return 200
+        }
+
+        [HttpGet("dayper/{id}")]
+        public async Task<ActionResult<IEnumerable<Leave>>> GetLeavesDayper(int id)
+        {
+            var leaveday = await _leave.Emp_General_Information.Where(a => a.emp_gen_id == id).ToListAsync();
+
+            return Ok(leaveday); //return 200
+        }
+
+
+        [HttpGet("department/{id}")]
+        public async Task<ActionResult<IEnumerable<Leave>>> GetDepartment(int id)
+        {
+            var leaveday = await _leave.Roles.Where(a => a.role_id == id).Join(_leave.Departments,
+                gen => gen.department_id,
+                per => per.department_id,
+                (_Roles,_department) => new
+                {
+                    _Roles,_department
+                }).ToListAsync();
+
+            return Ok(leaveday); //return 200
+        }
+
+
+        [HttpGet("diffdate/{id}")]
+        public async Task<ActionResult<IEnumerable<Leave>>> GetDiffDate(int id)
+        {
+            var leaveday = await _leave.Leaves.Where(a => a.emp_gen_id == id).ToListAsync();
+
+            return Ok(leaveday); //return 200
+        }
+
+
+
     }
 }
