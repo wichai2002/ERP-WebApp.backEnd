@@ -24,6 +24,7 @@ namespace Yinnaxs_BackEnd.Controllers
         private class PlayloadAuthen
         {
             public int emp_gen_id { get; set; }
+            public string? hrName { get; set; }
             public string? authen_token { get; set; }
         }
 
@@ -54,6 +55,9 @@ namespace Yinnaxs_BackEnd.Controllers
                     return Unauthorized(hashAlgorithm.VerifyHash(hrAccount.password, account.password));
                 }
 
+                var _emp = _applicationDbContext.Emp_General_Information.Where(emp => emp.emp_gen_id == hrAccount.emp_gen_id).Single();
+
+
                 var securityKey = new SymmetricSecurityKey(Encoding.UTF32.GetBytes(_configuration["Jwt:Key"]));
                 var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
@@ -70,6 +74,7 @@ namespace Yinnaxs_BackEnd.Controllers
                 PlayloadAuthen playload = new PlayloadAuthen
                 {
                     emp_gen_id = hrAccount.emp_gen_id,
+                    hrName = $"{_emp.first_name} {_emp.last_name}",
                     authen_token = token.ToString()
                 };
 
