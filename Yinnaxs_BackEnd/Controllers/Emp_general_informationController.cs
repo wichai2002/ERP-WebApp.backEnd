@@ -11,6 +11,7 @@ using Yinnaxs_BackEnd.Models;
 
 namespace Yinnaxs_BackEnd.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class Emp_general_informationController : ControllerBase
@@ -42,6 +43,7 @@ namespace Yinnaxs_BackEnd.Controllers
 
             return Ok(emp_gen_info_one);
         }
+
 
         [HttpPost]
         public async Task<ActionResult<Emp_general_information>> CreateEnp_gen_info(Emp_general_information emp_General_Information)
