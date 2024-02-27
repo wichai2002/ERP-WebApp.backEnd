@@ -21,5 +21,7 @@ namespace Yinnaxs_BackEnd.Models
 		public string? image_profile { get; set; }
 		public string? nationality { get; set; }
 		public bool emp_status { get; set; }
+        
+
     }
 }

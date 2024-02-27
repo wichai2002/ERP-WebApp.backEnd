@@ -11,7 +11,6 @@ using Yinnaxs_BackEnd.Models;
 
 namespace Yinnaxs_BackEnd.Controllers
 {
-    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class Emp_general_informationController : ControllerBase
@@ -29,6 +28,29 @@ namespace Yinnaxs_BackEnd.Controllers
             var emp_gen_info = await _emp_Gen_InformationContext.Emp_General_Information.ToListAsync();
 
             return Ok(emp_gen_info);
+        }
+
+        [HttpGet("withRoles")]
+        public async Task<ActionResult<IEnumerable<Emp_depart>>> GetAllEmp_gen_infoWithRoles()
+        {
+            var emp_gen_info_with_roles = await _emp_Gen_InformationContext.Emp_General_Information
+                .Join(
+                    _emp_Gen_InformationContext.Roles,
+                    empGenInfo => empGenInfo.role_id,
+                    role => role.role_id,
+                    (empGenInfo, role) => new { empGenInfo, role }
+                )
+                .Select(joinResult => new Emp_depart
+                {
+                    emp_gen_id = joinResult.empGenInfo.emp_gen_id,
+                    role_id = joinResult.role.role_id,
+                   
+                    department_id = joinResult.role.department_id, 
+                                                       
+                })
+                .ToListAsync();
+
+            return Ok(emp_gen_info_with_roles);
         }
 
         [HttpGet("{id}")]
