@@ -22,6 +22,8 @@ namespace Yinnaxs_BackEnd.Context
 		public DbSet<Leave> Leaves { get; set; }
 
 		public DbSet<Leaveday> Leavedays { get; set;}
+
+		public DbSet<Payroll> Payrolls { get; set; }
 	}
 }
 
