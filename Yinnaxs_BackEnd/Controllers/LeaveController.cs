@@ -32,23 +32,32 @@ namespace Yinnaxs_BackEnd.Controllers
         [HttpGet("check")]
         public async Task<ActionResult<IEnumerable<Leave>>> GetLeaves2()
         {
+            List<string> date_s = new List<string>();
+            List<string> date_e = new List<string>();
+
             var listResult = await _leave.Emp_General_Information.Join(_leave.Leaves,
                 gen => gen.emp_gen_id,
                 per => per.emp_gen_id,
                 (_gen, _per) => new
                 {
                     _gen,
-                    _per
+                    _per,
                 }
                 ).Join(_leave.Roles,
                 gen => gen._gen.role_id,
                 per => per.role_id,
                 (_table1, _table2) => new { role_name = _table2.position, _table1._gen, _table1._per }
-                ).ToListAsync();
+                ).Where(a => a._per.status == 0).ToListAsync();
 
+            foreach (var item in listResult)
+            {
+                string date1 = item._per.start_leave.ToString("yyyy-MM-dd");
+                date_s.Add(date1);
+                string date2 = item._per.end_leave.ToString("yyyy-MM-dd");
+                date_e.Add(date2);
+            }
 
-
-            return Ok(listResult); //return 200
+            return Ok(new { listResult1 = listResult, date1 = date_s, date2 = date_e }); //return 200
         }
 
         [HttpGet("day/{id}")]
@@ -87,6 +96,8 @@ namespace Yinnaxs_BackEnd.Controllers
         [HttpGet("diffdate/{id}")]
         public async Task<ActionResult<IEnumerable<Leave>>> GetDiffDate(int id)
         {
+            List<string> date_s = new List<string>();
+            List<string> date_e = new List<string>();
             //.Where(a => a.emp_gen_id == id)
             var leaveday = await _leave.Leaves.Where(a => a.emp_gen_id == id & a.status == 1).ToListAsync();
 
@@ -97,12 +108,15 @@ namespace Yinnaxs_BackEnd.Controllers
             {
 
                 TimeSpan diff1 = item.end_leave - item.start_leave;
-
                 diffList.Add(diff1);
+                string date1 = item.start_leave.ToString("yyyy-MM-dd");
+                date_s.Add(date1);
+                string date2 = item.end_leave.ToString("yyyy-MM-dd");
+                date_e.Add(date2);
             };
             //TimeSpan diff1 = leaveday.start_leave - leaveday.end_leave;
 
-            return Ok(new { diff = diffList, le = leaveday }); //return 200
+            return Ok(new { diff = diffList, le = leaveday, start_leave = date_s, end_leave = date_e }); //return 200
         }
 
 
@@ -163,6 +177,11 @@ namespace Yinnaxs_BackEnd.Controllers
                     }
                     _leave.Update(calulation_Leave);
                 };
+
+
+
+
+
 
 
                 await _leave.SaveChangesAsync();
