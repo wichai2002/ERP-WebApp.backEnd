@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Yinnaxs_BackEnd.Context;
 using Yinnaxs_BackEnd.Models;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Yinnaxs_BackEnd.Controllers
 {
@@ -125,7 +126,7 @@ namespace Yinnaxs_BackEnd.Controllers
             return Ok(new { count = fini, all = all_people }); //return 200
         }
 
-
+        //get data employee
         [HttpGet("idPer/{id}")]
         public async Task<ActionResult<IEnumerable<Payroll>>> GetInfo(int id)
         {
@@ -162,5 +163,72 @@ namespace Yinnaxs_BackEnd.Controllers
             return Ok(Info);
              
         }
+
+        //update salary employee
+        [HttpPut("updateEm/{id}/{pay}")]
+
+        public async Task<ActionResult<IEnumerable<Payroll>>> UpdatePayroll(int id,double pay)
+        {
+            var transaction = _payrollContext.Database.BeginTransaction();
+            try
+            {
+                var update = _payrollContext.Payrolls.Where(a => a.emp_gen_id == id).FirstOrDefault();
+
+                if (update != null)
+                {
+                    update.salary = pay;
+                    _payrollContext.Update(update);
+                }
+
+                await _payrollContext.SaveChangesAsync();
+                await transaction.CommitAsync();
+                return Ok(update);
+            }
+            catch (Exception ex)
+            {
+                transaction.Rollback();
+                return BadRequest(ex);
+            }
+        }
+
+        //getdata role for update
+        [HttpGet("getrole/{role_name}")]
+
+        public async Task<ActionResult<IEnumerable<Payroll>>> GetPayRole(string role_name)
+        {
+            var getrole = _payrollContext.Roles.Where(a => a.position == role_name).Join(_payrollContext.Departments,
+                a => a.department_id,
+                b => b.department_id,
+                (c,d) => new
+                {
+                    salaryBase = d.base_salary,
+                    DepartmentId = d.department_id
+                }).FirstOrDefault();
+            return Ok(getrole);
+        }
+
+        [HttpPut("updatepayRole/{did}/{pay}")]
+        public async Task<ActionResult<IEnumerable<Payroll>>> UpdatePayrollRole(int did,double pay)
+        {
+            var transaction = _payrollContext.Database.BeginTransaction();
+            try
+            {
+                var updatePayRole = _payrollContext.Departments.Where(a => a.department_id == did).FirstOrDefault();
+
+                updatePayRole.base_salary = pay;
+                _payrollContext.Update(updatePayRole);
+
+                await _payrollContext.SaveChangesAsync();
+                await transaction.CommitAsync();
+                return Ok(updatePayRole);
+            }
+            catch (Exception ex)
+            {
+                transaction.Rollback();
+                return BadRequest(ex);
+            }
+        }
+
+
     }
 }
