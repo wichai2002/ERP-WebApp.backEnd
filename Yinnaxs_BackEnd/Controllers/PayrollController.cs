@@ -44,33 +44,34 @@ namespace Yinnaxs_BackEnd.Controllers
                     {
                         Role = role,
                         Count = p.Count,
-                        
+
                     }
                 ).Join(_payrollContext.Departments,
                 a => a.Role.department_id,
                 b => b.department_id,
-                (a ,b) => new 
-                { 
-                    salary = b.base_salary, 
+                (a, b) => new
+                {
+                    salary = b.base_salary,
                     RoleId = a.Role,
                     conut = a.Count
 
                 }).ToList();
 
             //find max min
-             var check = _payrollContext.Emp_General_Information.Join(_payrollContext.Payrolls,
-                 a => a.emp_gen_id,
-                 b => b.emp_gen_id,
-                 (emp,pay) => new 
-                 {
-                    emp,pay
-                 }).GroupBy(a => a.emp.role_id).Select(g => new
-                 {
-                     RoleId = g.Key,
-                     MaxProperty = g.Max(x => x.pay.salary),
-                     MinProperty = g.Min(x => x.pay.salary),
-                     SumProperty = g.Sum(x => x.pay.salary)
-                 }).ToList();
+            var check = _payrollContext.Emp_General_Information.Join(_payrollContext.Payrolls,
+                a => a.emp_gen_id,
+                b => b.emp_gen_id,
+                (emp, pay) => new
+                {
+                    emp,
+                    pay
+                }).GroupBy(a => a.emp.role_id).Select(g => new
+                {
+                    RoleId = g.Key,
+                    MaxProperty = g.Max(x => x.pay.salary),
+                    MinProperty = g.Min(x => x.pay.salary),
+                    SumProperty = g.Sum(x => x.pay.salary)
+                }).ToList();
 
 
             var sortedCheck = check.OrderBy(c => c.RoleId).ToList();
@@ -79,18 +80,19 @@ namespace Yinnaxs_BackEnd.Controllers
             var all_people = _payrollContext.Emp_General_Information.Join(_payrollContext.Roles,
                 a => a.role_id,
                 b => b.role_id,
-                (emp,rol) => new 
+                (emp, rol) => new
                 {
                     rolId = rol.department_id,
                     empId = emp.emp_gen_id,
-                    name = emp.first_name + " " +emp.last_name,
+                    name = emp.first_name + " " + emp.last_name,
                     roleName = rol.position
                 }).Join(_payrollContext.Departments,
                 a => a.rolId,
                 b => b.department_id,
-                (one,dep) => new
+                (one, dep) => new
                 {
-                    one,dep
+                    one,
+                    dep
                 }).Join(_payrollContext.Payrolls,
                 a => a.one.empId,
                 b => b.emp_gen_id,
@@ -104,9 +106,61 @@ namespace Yinnaxs_BackEnd.Controllers
 
                 }).ToList();
 
+            //final Count all
+            var fini = sortedCheck.Join(rolesWithCounts,
+                a => a.RoleId,
+                b => b.RoleId.role_id,
+                (sort, count) => new
+                {
+                    RoleName = count.RoleId.position,
+                    CountPeo = count.conut,
+                    BaseSalary = count.salary,
+                    MaxSalary = sort.MaxProperty,
+                    MinSalary = sort.MinProperty,
+                    SumSalary = sort.SumProperty
+                }).ToList();
+
+
             //return Ok(all_people);
-            return Ok(new {check1 = sortedCheck, count = rolesWithCounts,all = all_people }); //return 200
+            return Ok(new { count = fini, all = all_people }); //return 200
         }
 
+
+        [HttpGet("idPer/{id}")]
+        public async Task<ActionResult<IEnumerable<Payroll>>> GetInfo(int id)
+        {
+            var Info = await _payrollContext.Emp_General_Information.Join(_payrollContext.Roles,
+                a => a.role_id,
+                b => b.role_id,
+                (info,role) => new
+                {
+                    EmpId = info.emp_gen_id,
+                    fullname = info.first_name + " " + info.last_name,
+                    roleName = role.position,
+                    roleId = role.department_id
+                }).Where(a => a.EmpId == id).Join(_payrollContext.Departments,
+                a => a.roleId,
+                b => b.department_id,
+                (role_one,depart) => new
+                {
+                    departmentName = depart.department_name,
+                    EmpId = role_one.EmpId,
+                    Fullname = role_one.fullname,
+                    RoleName = role_one.roleName
+                }).Join(_payrollContext.Payrolls,
+                a => a.EmpId,
+                b => b.emp_gen_id,
+                (Emp_info, payroll) => new 
+                { 
+                    EmId = Emp_info.Fullname,
+                    departName = Emp_info.departmentName,
+                    roleName = Emp_info.RoleName,
+                    payInfo = payroll.salary
+                }).ToListAsync();
+
+
+            return Ok(Info);
+             
+        }
     }
 }
