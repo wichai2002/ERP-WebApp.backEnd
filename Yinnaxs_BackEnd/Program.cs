@@ -22,23 +22,6 @@ builder.Services.AddCors(option =>
 var jwtIssuer = builder.Configuration.GetSection("Jwt:Issuer").Get<string>();
 var jwtKey = builder.Configuration.GetSection("Jwt:Key").Get<string>();
 
-//builder.Services.AddAuthentication(item =>{JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(option =>
-
-//    {
-//        option.SaveToken = true;
-//        option.TokenValidationParameters = new TokenValidationParameters
-//        {
-//            ValidateIssuer = false,
-//            ValidateAudience = false,
-//            ValidateLifetime = true,
-//            ValidateIssuerSigningKey = true,
-//            ValidIssuer = jwtIssuer,
-//            ValidAudience = jwtIssuer,
-//            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF32.GetBytes(jwtKey)),
-//            ClockSkew = TimeSpan.Zero
-//        };
-//    });
-
 builder.Services.AddAuthentication(item =>
 {
     item.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -82,13 +65,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
 app.UseCors();
-
-
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();

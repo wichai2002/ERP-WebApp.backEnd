@@ -8,7 +8,6 @@ namespace Yinnaxs_BackEnd.Models
     public class Leaveday
     {
         [Key]
-
         public int leave_id { get; set; }
         public int emp_gen_id { get; set; }
         public int sick_leave { get; set;}

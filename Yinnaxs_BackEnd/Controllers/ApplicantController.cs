@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Yinnaxs_BackEnd.Context;
 using Yinnaxs_BackEnd.Models;
+using Yinnaxs_BackEnd.Utility;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -16,7 +17,8 @@ namespace Yinnaxs_BackEnd.Controllers
     public class ApplicantController : Controller
     {
         private readonly ApplicationDbContext _applicant_Context;
-         
+        private EmailSender emailSender;
+
         public ApplicantController(ApplicationDbContext applicationDbContext)
         {
             _applicant_Context = applicationDbContext;
@@ -49,7 +51,8 @@ namespace Yinnaxs_BackEnd.Controllers
                 application_date = app.application_date,
                 role = app.role,
                 date_of_birth = app.date_of_birth,
-                status = app.status
+                status = app.status,
+                hire_date = Convert.ToString(app.hire_date)
 
             }).ToListAsync();
 
@@ -60,9 +63,101 @@ namespace Yinnaxs_BackEnd.Controllers
         public async Task<ActionResult<Applicant>> CreateApplicant(Applicant applicant)
         {
             _applicant_Context.Applicants.Add(applicant);
-           await _applicant_Context.SaveChangesAsync();
+            await _applicant_Context.SaveChangesAsync();
 
             return CreatedAtAction(nameof(GetAll), new { id = applicant.applicant_id, applicant });
+        }
+
+        [HttpPut("Announcement/{id:int}/{accept:bool}")]
+        public async Task<ActionResult<Applicant>> AnnouncementInterview(int id,bool accept, Applicant applicant)
+        {
+
+            var transaction = _applicant_Context.Database.BeginTransaction();
+  
+            Request.Headers.TryGetValue("hrName", out var emp_name);
+
+            if (applicant == null)
+            {
+                return BadRequest();
+            }
+            try
+            {
+                Console.WriteLine(id);
+                Console.WriteLine(applicant.hire_date);
+                Console.WriteLine(applicant.email);
+                Console.WriteLine(accept);
+
+                var _applicant = await _applicant_Context.Applicants
+                .Where(app => app.applicant_id == id).FirstOrDefaultAsync();
+                
+                if (_applicant == null)
+                {
+                    return BadRequest("Applicant is null");
+                }
+
+                _applicant.hire_date = applicant.hire_date;
+                _applicant.status = "Interviewed";
+                _applicant.accept = accept;
+
+                _applicant_Context.Update(_applicant);
+
+                await _applicant_Context.SaveChangesAsync();
+
+                var _appointment = await _applicant_Context.Appointments.
+                    Where(appo => appo.applicant_id == id).FirstOrDefaultAsync();
+
+                if (_appointment == null)
+                {
+                    return BadRequest();
+                }
+
+                _appointment.appointmented = true;
+
+                _applicant_Context.Update(_appointment);
+
+                await _applicant_Context.SaveChangesAsync();
+
+                emailSender = new EmailSender();
+
+                bool sendEmail = emailSender.sendEmail_Accept_Applicant(
+                    emp_name,
+                    $"{_applicant.first_name} {_applicant.last_name}",
+                    applicant.email,
+                    _applicant.role,
+                    _applicant.hire_date,
+                    accept);
+
+                if (sendEmail == true)
+                {
+                   await transaction.CommitAsync();
+                }
+                else
+                {
+                    throw new DbUpdateConcurrencyException();
+                }
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                await transaction.RollbackAsync();
+
+                if (!ApplicantExit(id))
+                {
+                    // status 400
+                    return BadRequest();
+                }
+                else
+                {
+                    throw ;
+                }
+            }
+
+            // status 204
+            return NoContent();
+        }
+
+        private bool ApplicantExit(int id)
+        {
+            return _applicant_Context.Applicants.Any(app => app.applicant_id == id);
         }
     }
 }

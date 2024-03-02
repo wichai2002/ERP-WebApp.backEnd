@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Yinnaxs_BackEnd.Context;
@@ -11,6 +12,7 @@ using Yinnaxs_BackEnd.Models;
 
 namespace Yinnaxs_BackEnd.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class RoleController : Controller

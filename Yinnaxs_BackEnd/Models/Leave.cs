@@ -8,8 +8,6 @@ namespace Yinnaxs_BackEnd.Models
     public class Leave
     {
         [Key]
-
-
         public int leave_req_number { get; set; }
         public int emp_gen_id { get; set; }
         public string type { get; set; }

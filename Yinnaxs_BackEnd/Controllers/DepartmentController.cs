@@ -32,6 +32,8 @@ namespace Yinnaxs_BackEnd.Controllers
             return Ok(department);
         }
 
+
+        // list
         [HttpGet("list")]
         public async Task<ActionResult<IEnumerable<Department>>> GetDepartmentListName()
         {   
@@ -40,6 +42,7 @@ namespace Yinnaxs_BackEnd.Controllers
                 d.department_id,
                 d.department_name
             }).ToListAsync();
+
             return Ok(department);
         }
        
@@ -57,7 +60,6 @@ namespace Yinnaxs_BackEnd.Controllers
             return Ok(department_one);
         }
 
-
         // POST api/values
         [HttpPost]
         public async Task<ActionResult<Department>> CreateDepartment(Department department)
@@ -69,7 +71,6 @@ namespace Yinnaxs_BackEnd.Controllers
         }
 
         // PUT api/values/5
-
         [HttpPut("{id:int}")]
         public async Task<IActionResult> UpdateDepartment(int id, Department department)
 

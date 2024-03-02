@@ -7,12 +7,14 @@ using Yinnaxs_BackEnd.Context;
 using Microsoft.EntityFrameworkCore;
 using Yinnaxs_BackEnd.Models;
 using Yinnaxs_BackEnd.Utility;
+using Microsoft.AspNetCore.Authorization;
 
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace Yinnaxs_BackEnd.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class AppoinmentController : Controller
@@ -24,6 +26,7 @@ namespace Yinnaxs_BackEnd.Controllers
             _appointmentDbContext = applicationDbContext;
         }
 
+
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Appointment>>> GetAppointmentAll()
         {
@@ -32,6 +35,7 @@ namespace Yinnaxs_BackEnd.Controllers
             return Ok(appointment);
         }
 
+        // api/Appoinment/:id
         [HttpGet("{id}")]
         public async Task<ActionResult<Appointment>> GetAppointmentByID(int id)
         {
@@ -60,10 +64,11 @@ namespace Yinnaxs_BackEnd.Controllers
                     date = _appo.date,
                     time = _appo.time,
                     role = _appli.role,
+                    appomented = _appo.appointmented,
                     first_name = _appli.first_name,
                     last_name = _appli.last_name
 
-                }).ToListAsync();
+                }).Where(app => app.appomented == false).ToListAsync();
 
             if (appointment_list != null)
             {
@@ -89,12 +94,14 @@ namespace Yinnaxs_BackEnd.Controllers
                 _appointmentDbContext.Add(appointment);
                 await _appointmentDbContext.SaveChangesAsync();
 
+                // fetch table
                 var _apllicant = await _appointmentDbContext.Applicants
                     .Where(app => app.applicant_id == appointment.applicant_id).FirstOrDefaultAsync();
 
+                // change value
                 _apllicant.status = "Appointmented";
                 _appointmentDbContext.Update(_apllicant);
-
+                // save new value
                 await _appointmentDbContext.SaveChangesAsync();
 
                 EmailSender emailSender = new EmailSender();
@@ -116,6 +123,7 @@ namespace Yinnaxs_BackEnd.Controllers
                 {
                     throw new Exception("Send Email error");
                 }
+
 
                 // return http code 201
                 return CreatedAtAction(nameof(GetAppointmentAll), new { id = appointment.appo_id, appointment });

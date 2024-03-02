@@ -7,7 +7,7 @@ namespace Yinnaxs_BackEnd.Utility
 		{
 		}
 
-		public string intervieBody(string senderName, string receiverName, DateTime date, string time)
+		public string interviewBody(string senderName, string receiverName, DateTime date, string time)
 		{
 			string message =
 				$"<p>Dear Mr/Mrs {receiverName}</p>\n" +
@@ -20,7 +20,6 @@ namespace Yinnaxs_BackEnd.Utility
 				"<br>\n" +
 				$"<p>Best regards,</p>\n<p>{senderName}</p>\n" +
 				"<p>(Team Recruiter)</p>\n" +
-				"<br>\n" +
 				"<svg width=\"103\" height=\"103\" viewBox=\"0 0 103 103\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n" +
 				"<rect width=\"103\" height=\"103\" fill=\"url(#pattern0)\"/>\n  <defs>\n  <pattern id=\"pattern0\" patternContentUnits=\"objectBoundingBox\" width=\"1\" height=\"1\">\n" +
 				"<use xlink:href=\"#image0_4_633\" transform=\"scale(0.015625)\"/>\n  </pattern>\n " +
@@ -28,9 +27,51 @@ namespace Yinnaxs_BackEnd.Utility
 				"</defs>\n </svg>\n" +
 				"<p>Yinnaxs co.th</p>\n" +
 				"<p>1 Chalong Krung 1 Alley, Lat Krabang, Bangkok 10520</p>";
+			return message;
+        }
+
+		public string recruitment_HoldOfApplication(string senderName, string receiverName, string role)
+		{
+			string message =
+				$"<p>Dear Ms/Mrs {receiverName}"+
+				$"<p>Thank you so much for your interest in Yinnaxs.co.th and thank you for taking the time to meet with us to discuss your interest in the {role} position at Yinnaxs.</p>\n" +
+				"<p>We’d like to let you know that this is a very competitive position and after careful consideration, our hiring team has decided to “hold off” your application for further consideration as our Team.</p>\n" +
+				"<p>We enjoyed meeting you and will keep your resume on file if any opportunities come up that are a better match for your experience and skills.</p>\n" +
+				"<p>If you have any questions, please do not hesitate to contact me.</p>\n" +
+				"<br>\n" +
+				"<p>Tel : 080-2535-xxx</p>\n" +
+				"<br>\n " +
+				"<p>Best regards,</p>\n" +
+				$"<p>{senderName}</p>"+
+				"<p>(Team Recruiter)</p>\n" +
+				"<br>\n" +
+				"<p>Yinnaxs co.th</p>\n" +
+				"<p>1 Chalong Krung 1 Alley, Lat Krabang, Bangkok 10520</p>";
 
 			return message;
         }
-	}
+
+        public string recruitment_HoldOnApplication(string senderName, string receiverName, string role, DateTime hire_date)
+        {
+            string message =
+                $"<p>Dear Ms/Mrs {receiverName}" +
+                $"<p>Thank you so much for your interest in Yinnaxs.co.th and thank you for taking the time to meet with us to discuss your interest in the {role} position at Yinnaxs.</p>\n" +
+                "<p>We’d like to let you know that this is a very competitive position and after careful consideration, our hiring team has decided to “hold On” your application for further consideration as our Team.</p>\n" +
+                $"<p>We enjoyed to work with you. We appointment to sign an employment contract at our office on {hire_date}</p>\n" +
+                "<p>If you have any questions, please do not hesitate to contact me.</p>\n" +
+                "<br>\n" +
+                "<p>Tel : 080-2535-xxx</p>\n" +
+                "<br>\n " +
+                "<p>Best regards,</p>\n" +
+                $"<p>{senderName}</p>" +
+                "<p>(Team Recruiter)</p>\n" +
+                "<br>\n" +
+                "<p>Yinnaxs co.th</p>\n" +
+                "<p>1 Chalong Krung 1 Alley, Lat Krabang, Bangkok 10520</p>";
+            return message;
+        }
+
+
+    }
 }
 

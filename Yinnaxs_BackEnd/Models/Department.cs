@@ -13,6 +13,5 @@ namespace Yinnaxs_BackEnd.Models
 		public double base_salary { get; set; }
 		public double limit_total_salary { get; set; }
 	}
-
 }
 
