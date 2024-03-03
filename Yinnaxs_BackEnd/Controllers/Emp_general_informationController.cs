@@ -5,9 +5,9 @@ using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
 using Yinnaxs_BackEnd.Context;
 using Yinnaxs_BackEnd.Models;
-
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace Yinnaxs_BackEnd.Controllers
@@ -16,15 +16,27 @@ namespace Yinnaxs_BackEnd.Controllers
     [ApiController]
     public class Emp_general_informationController : ControllerBase
     {
-
         public class Editclass
         {
-            public string first_name { get; set; }
-            public string last_name { get; set; }
-            public int age { get; set; }
-               
-        }
-            
+            public int id { set; get; }
+            public string? first_name { set; get; }
+            public string? last_name { set; get; }
+            public string? department { set; get; }
+            public string? role { set; get; }
+            public string? phone { set; get; }
+            public string? email { set; get; }
+            public string? nation { set; get; }
+            public string? nick_name { set; get; }
+            public string? address { set; get; }
+            public bool married { set; get; }
+            public int? children { set; get; }
+            public string? account_number { set; get; }
+            public int sickleave { get; set; }
+            public int personalleave { get; set; }
+            public int vacationleave { get; set; }
+            public string? time_start { get; set; }
+            public string? time_end { get; set; }
+        }    
 
         private readonly ApplicationDbContext _emp_Gen_InformationContext;
 
@@ -292,23 +304,97 @@ namespace Yinnaxs_BackEnd.Controllers
                 return BadRequest(ex);
             }
 
-
-
-
-
-
         }
 
-
         [HttpPut("update_emp")]
-        public async Task<IActionResult> UpdateEmp([FromBody] Editclass editclass)
+        public async Task<IActionResult> update_emp([FromBody] Editclass editclass)
         {
             var transaction = _emp_Gen_InformationContext.Database.BeginTransaction();
-
             try
             {
-                Console.WriteLine(editclass.first_name);
-                return Ok("ok");
+                if (editclass == null)
+                {
+                    return BadRequest();
+                }
+                int id = editclass.id;
+                string first_name = editclass.first_name;
+                string last_name = editclass.last_name;
+                string department = editclass.department;
+                string role = editclass.role;
+                string phone = editclass.phone;
+                string email = editclass.email;
+                string nation = editclass.nation;
+                string nickname = editclass.nick_name;
+                string address = editclass.address;
+                bool married = editclass.married;
+                string account_number = editclass.account_number;
+                int sick = editclass.sickleave;
+                int personalLeave = editclass.personalleave;
+                int vacationLeave = editclass.vacationleave;
+                string time_start = editclass.time_start;
+                string time_end = editclass.time_end;
+                
+                if (editclass.children == null)
+                {
+                    editclass.children = 0;
+                }
+
+                var update = _emp_Gen_InformationContext.Emp_General_Information.Where(a => a.emp_gen_id == id).FirstOrDefault();
+                //var update2 = _emp_Gen_InformationContext.Emp_Personal_Informaion.Where(a => a.emp_gen_id == id).FirstOrDefault();
+                var update3 = _emp_Gen_InformationContext.Leavedays.Where(a => a.emp_gen_id == id).FirstOrDefault();
+                //var update4 = _emp_Gen_InformationContext.Emp_General_Information.Where(a => a.emp_gen_id == id).Join(_emp_Gen_InformationContext.Roles,
+                  //  a => a.role_id,
+                    //b => b.role_id,
+                    //(a, b) => new
+                    //{
+                      //  a,
+                        //b
+                    //}).FirstOrDefault();
+                //var update5 = _emp_Gen_InformationContext.Emp_General_Information.Where(a => a.emp_gen_id == id).Join(_emp_Gen_InformationContext.Roles,
+                //    a => a.role_id,
+                 //   b => b.role_id,
+                 //   (a, b) => new
+                  //  {
+                  //      departId = b.department_id
+                  //  }).Join(_emp_Gen_InformationContext.Departments,
+                  //  a => a.departId,
+                  //  b => b.department_id,
+                   // (a,b) => new
+                   // {
+                   //     a,b
+                   // }).FirstOrDefault();
+
+                update.first_name = first_name;
+                update.last_name = last_name;
+                update.nick_name = nickname;
+                update.email = email;
+                update.phone = phone;
+                update.nationality = nation;
+
+                //update2.married = married;
+                //update2.children = editclass.children;
+                //update2.bank_account = account_number;
+                //update2.address = address;
+
+                update3.sick_leave = sick;
+                update3.personal_leave = personalLeave;
+                update3.vacation_leave = vacationLeave;
+
+                //update4.b.position = role;
+                //update4.b.start_work = time_start;
+                //update4.b.finish_work = time_end;
+
+                //update5.b.department_name = department;
+
+                _emp_Gen_InformationContext.Update(update);
+                //_emp_Gen_InformationContext.Update(update2);
+                _emp_Gen_InformationContext.Update(update3);
+                //_emp_Gen_InformationContext.Update(update4);
+                //_emp_Gen_InformationContext.Update(update5);
+
+                await _emp_Gen_InformationContext.SaveChangesAsync();
+                await transaction.CommitAsync();
+                return Ok(update2);
 
             }
             catch (Exception ex)
@@ -317,6 +403,8 @@ namespace Yinnaxs_BackEnd.Controllers
                 return BadRequest(ex);
             }
         }
+
+
 
 
 
