@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Runtime.ConstrainedExecution;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +16,16 @@ namespace Yinnaxs_BackEnd.Controllers
     [ApiController]
     public class Emp_general_informationController : ControllerBase
     {
+
+        public class Editclass
+        {
+            public string first_name { get; set; }
+            public string last_name { get; set; }
+            public int age { get; set; }
+               
+        }
+            
+
         private readonly ApplicationDbContext _emp_Gen_InformationContext;
 
         public Emp_general_informationController(ApplicationDbContext emp_Gen_InformationContext)
@@ -29,6 +40,40 @@ namespace Yinnaxs_BackEnd.Controllers
 
             return Ok(emp_gen_info);
         }
+
+        [HttpGet("emp_list")]
+        public async Task<ActionResult<IEnumerable<Emp_general_information>>> GetAllEmp_gen_info_list()
+        {
+            var emp_gen_info = await _emp_Gen_InformationContext.Emp_General_Information.Join(_emp_Gen_InformationContext.Roles,
+                a => a.role_id,
+                b => b.role_id,
+                (emp,role) => new
+                {
+                    emp_id = emp.emp_gen_id,
+                    fullname = emp.first_name + " "+ emp.last_name,
+                    email = emp.email,  
+                    role_name = role.position,
+                    status = emp.emp_status
+                }).Join(_emp_Gen_InformationContext.Emp_Personal_Informaion,
+                a => a.emp_id,
+                b => b.emp_gen_id,
+                (emp,per) => new 
+                {
+                    emp_id = per.emp_gen_id,
+                    fullname = emp.fullname,
+                    email = emp.email,
+                    role_name = emp.role_name,
+                    join_date = per.hire_date.ToString("yyyy-MM-dd"),
+                    status = emp.status
+
+                }).ToListAsync();
+
+            return Ok(emp_gen_info);
+        }
+
+
+
+
 
         [HttpGet("list")]
         public async Task<ActionResult<IEnumerable<Emp_general_information>>> GetListName()
@@ -122,6 +167,159 @@ namespace Yinnaxs_BackEnd.Controllers
         {
             return _emp_Gen_InformationContext.Emp_General_Information.Any(e => e.emp_gen_id == id);
         }
+
+
+        [HttpGet("em_info/{id}")]
+        public async Task<ActionResult<Emp_general_information>> GetEmp_gen_infoById_For_Edit(int id)
+        {
+
+            //table 1
+            var emp_gen_info_one = await _emp_Gen_InformationContext.Emp_General_Information.Where(a => a.emp_gen_id == id)
+                .Join(_emp_Gen_InformationContext.Roles,
+                a => a.role_id,
+                b => b.role_id,
+                (info,role) => new
+                {
+                    roleId = info.role_id,
+                    phone = info.phone,
+                    nationality = info.nationality,
+                    position = role.position,
+                    departmentId = role.department_id
+                })
+                .Join(_emp_Gen_InformationContext.Departments,
+                a => a.departmentId,
+                b => b.department_id,
+                (info,depart) => new
+                {
+                    departmentName = depart.department_name,
+                    roleName = info.position,
+                    phone = info.phone,
+                    nation = info.nationality
+                }).ToListAsync();
+                
+
+
+
+            //table 2
+            var emp_gen_info_two = await _emp_Gen_InformationContext.Emp_General_Information.Where(a => a.emp_gen_id == id).
+                Join(_emp_Gen_InformationContext.Emp_Personal_Informaion,
+                a => a.emp_gen_id,
+                b => b.emp_gen_id,
+                (emp,per) => new
+                {
+                    emp_id = emp.emp_gen_id,
+                    roleId = emp.role_id,
+                    first_name = emp.first_name,
+                    last_name = emp.last_name,
+                    nickname = emp.nick_name,
+                    gender = emp.gender,
+                    birth = emp.date_of_birth.ToString("yyyy-MM-dd"),
+                    email = emp.email,
+                    address = per.address,
+                    hire_date = per.hire_date.ToString("yyyy-MM-dd")
+                }).Join(_emp_Gen_InformationContext.Roles,
+                a => a.roleId,
+                b => b.role_id,
+                (one,two) => new 
+                {
+                    first_name = one.first_name,
+                    last_name = one.last_name,
+                    nickname = one.nickname,
+                    gender = one.gender,
+                    birth = one.birth,
+                    email = one.email,
+                    address = one.address,
+                    hire_date = one.hire_date,
+                    start_time = two.start_work.Replace(".",":").PadLeft(5, '0'),
+                    end_time = two.finish_work.Replace(".", ":").PadLeft(5, '0')
+                }).ToListAsync();
+
+            //table 3
+            var emp_gen_info_three = await _emp_Gen_InformationContext.Emp_General_Information.Where(a => a.emp_gen_id == id)
+                .Join(_emp_Gen_InformationContext.Emp_Personal_Informaion,
+                a => a.emp_gen_id,
+                b => b.emp_gen_id,
+                (info,per) => new
+                {
+                    empId = info.emp_gen_id,
+                    married = per.married,
+                    children = per.children,
+                    fullname = info.first_name,
+                    bankingNumber = per.bank_account,
+
+                }).Join(_emp_Gen_InformationContext.Educations,
+                a => a.empId,
+                b => b.emp_gen_id,
+                (one,two) => new
+                {
+                    married = one.married,
+                    children = one.children,
+                    fullname = one.fullname,
+                    bankingNumber = one.bankingNumber,
+                    university = two.university_name,
+                    degree = two.degree,
+                    program = two.program,
+                    gpa = two.gpa,
+                    graduration = two.grad_year
+                }).ToListAsync();
+
+            //table 4
+            var emp_gen_info_four = await _emp_Gen_InformationContext.Leavedays.Where(a => a.emp_gen_id == id).ToListAsync();
+
+            return Ok(new {employee_if = emp_gen_info_one,main_info = emp_gen_info_two,other_info = emp_gen_info_three,leave_day=emp_gen_info_four});
+        }
+
+
+        [HttpPut("reject/{id}")]
+        public async Task<ActionResult<Emp_general_information>> Reject_Emp(int id)
+        {
+
+            var transaction = _emp_Gen_InformationContext.Database.BeginTransaction();
+            try
+            {
+                var rejectEmp = await _emp_Gen_InformationContext.Emp_General_Information.Where(a => a.emp_gen_id == id).FirstOrDefaultAsync();
+
+                rejectEmp.emp_status = false;
+                _emp_Gen_InformationContext.Update(rejectEmp);
+
+                await _emp_Gen_InformationContext.SaveChangesAsync();
+                await transaction.CommitAsync();
+                return Ok(rejectEmp);
+            }
+            catch (Exception ex)
+            {
+                transaction.Rollback();
+                return BadRequest(ex);
+            }
+
+
+
+
+
+
+        }
+
+
+        [HttpPut("update_emp")]
+        public async Task<IActionResult> UpdateEmp([FromBody] Editclass editclass)
+        {
+            var transaction = _emp_Gen_InformationContext.Database.BeginTransaction();
+
+            try
+            {
+                Console.WriteLine(editclass.first_name);
+                return Ok("ok");
+
+            }
+            catch (Exception ex)
+            {
+                transaction.Rollback();
+                return BadRequest(ex);
+            }
+        }
+
+
+
     }
 
 }
