@@ -44,13 +44,34 @@ namespace Yinnaxs_BackEnd.Controllers
                 {
                     emp_gen_id = joinResult.empGenInfo.emp_gen_id,
                     role_id = joinResult.role.role_id,
-                   
-                    department_id = joinResult.role.department_id, 
-                                                       
+
+                    department_id = joinResult.role.department_id,
+
                 })
                 .ToListAsync();
 
             return Ok(emp_gen_info_with_roles);
+        }
+
+        [HttpGet("list")]
+        public async Task<ActionResult<IEnumerable<Emp_general_information>>> GetListName()
+        {
+            var listResutlt = await _emp_Gen_InformationContext.Emp_General_Information
+                 .Join(_emp_Gen_InformationContext.Emp_Personal_Informaion,
+                    gen => gen.emp_gen_id, per => per.emp_gen_id,
+                    (_gen, _per) => new
+                    {
+                        emp_gen_id = _gen.emp_gen_id,
+                        first_name = _gen.first_name,
+                        last_name = _gen.last_name,
+                        email = _gen.email,
+                        role_id = _gen.role_id,
+                        hire_date = _per.hire_date,
+                        department_id = 0
+                    }
+                 ).ToListAsync();
+
+            return Ok(listResutlt);
         }
 
         [HttpGet("{id}")]

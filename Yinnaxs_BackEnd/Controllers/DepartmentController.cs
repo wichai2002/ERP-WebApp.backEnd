@@ -29,7 +29,17 @@ namespace Yinnaxs_BackEnd.Controllers
         public async Task<ActionResult<IEnumerable<Department>>> GetDepartments()
         {
             var department = await _departmentContext.Departments.ToListAsync();
+            return Ok(department);
+        }
 
+        [HttpGet("list")]
+        public async Task<ActionResult<IEnumerable<Department>>> GetDepartmentListName()
+        {   
+            var department = await _departmentContext.Departments.Select(d => new
+            {
+                d.department_id,
+                d.department_name
+            }).ToListAsync();
             return Ok(department);
         }
        
