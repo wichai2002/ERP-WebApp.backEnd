@@ -289,10 +289,19 @@ namespace Yinnaxs_BackEnd.Controllers
             var transaction = _emp_Gen_InformationContext.Database.BeginTransaction();
             try
             {
+
                 var rejectEmp = await _emp_Gen_InformationContext.Emp_General_Information.Where(a => a.emp_gen_id == id).FirstOrDefaultAsync();
+                var rejecttime = await _emp_Gen_InformationContext.Emp_Personal_Informaion.Where(a => a.emp_gen_id == id).FirstOrDefaultAsync();
+
 
                 rejectEmp.emp_status = false;
                 _emp_Gen_InformationContext.Update(rejectEmp);
+                await _emp_Gen_InformationContext.SaveChangesAsync();
+
+                rejecttime.resign_date = DateTime.Now.ToString("yyyy-MM-dd");
+                _emp_Gen_InformationContext.Update(rejecttime);
+                await _emp_Gen_InformationContext.SaveChangesAsync();
+
 
                 await _emp_Gen_InformationContext.SaveChangesAsync();
                 await transaction.CommitAsync();
@@ -342,27 +351,7 @@ namespace Yinnaxs_BackEnd.Controllers
                 var update = _emp_Gen_InformationContext.Emp_General_Information.Where(a => a.emp_gen_id == id).FirstOrDefault();
                 var update2 = _emp_Gen_InformationContext.Emp_Personal_Informaion.Where(a => a.emp_gen_id == id).FirstOrDefault();
                 var update3 = _emp_Gen_InformationContext.Leavedays.Where(a => a.emp_gen_id == id).FirstOrDefault();
-                //var update4 = _emp_Gen_InformationContext.Emp_General_Information.Where(a => a.emp_gen_id == id).Join(_emp_Gen_InformationContext.Roles,
-                  //  a => a.role_id,
-                    //b => b.role_id,
-                    //(a, b) => new
-                    //{
-                      //  a,
-                        //b
-                    //}).FirstOrDefault();
-                //var update5 = _emp_Gen_InformationContext.Emp_General_Information.Where(a => a.emp_gen_id == id).Join(_emp_Gen_InformationContext.Roles,
-                //    a => a.role_id,
-                 //   b => b.role_id,
-                 //   (a, b) => new
-                  //  {
-                  //      departId = b.department_id
-                  //  }).Join(_emp_Gen_InformationContext.Departments,
-                  //  a => a.departId,
-                  //  b => b.department_id,
-                   // (a,b) => new
-                   // {
-                   //     a,b
-                   // }).FirstOrDefault();
+
 
                 update.first_name = first_name;
                 update.last_name = last_name;
@@ -388,14 +377,6 @@ namespace Yinnaxs_BackEnd.Controllers
 
                 _emp_Gen_InformationContext.Update(update3);
                 await _emp_Gen_InformationContext.SaveChangesAsync();
-
-                //update4.b.position = role;
-
-                //update5.b.department_name = department;
-
-
-                //_emp_Gen_InformationContext.Update(update4);
-                //_emp_Gen_InformationContext.Update(update5);
 
 
                 Console.WriteLine(update2);
