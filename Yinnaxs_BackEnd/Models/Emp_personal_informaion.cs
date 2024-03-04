@@ -16,7 +16,7 @@ namespace Yinnaxs_BackEnd.Models
 		public string? bank_account { get; set; }
 		public string? address { get; set; }
 		public DateTime hire_date { get; set; }
-		public DateTime resign_date { get; set; }
+		public string? resign_date { get; set; }
     }
 }
 

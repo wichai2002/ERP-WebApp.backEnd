@@ -326,7 +326,7 @@ namespace Yinnaxs_BackEnd.Controllers
                 string nation = editclass.nation;
                 string nickname = editclass.nick_name;
                 string address = editclass.address;
-                bool married = editclass.married;
+                bool marry = editclass.married;
                 string account_number = editclass.account_number;
                 int sick = editclass.sickleave;
                 int personalLeave = editclass.personalleave;
@@ -340,7 +340,7 @@ namespace Yinnaxs_BackEnd.Controllers
                 }
 
                 var update = _emp_Gen_InformationContext.Emp_General_Information.Where(a => a.emp_gen_id == id).FirstOrDefault();
-                //var update2 = _emp_Gen_InformationContext.Emp_Personal_Informaion.Where(a => a.emp_gen_id == id).FirstOrDefault();
+                var update2 = _emp_Gen_InformationContext.Emp_Personal_Informaion.Where(a => a.emp_gen_id == id).FirstOrDefault();
                 var update3 = _emp_Gen_InformationContext.Leavedays.Where(a => a.emp_gen_id == id).FirstOrDefault();
                 //var update4 = _emp_Gen_InformationContext.Emp_General_Information.Where(a => a.emp_gen_id == id).Join(_emp_Gen_InformationContext.Roles,
                   //  a => a.role_id,
@@ -371,30 +371,37 @@ namespace Yinnaxs_BackEnd.Controllers
                 update.phone = phone;
                 update.nationality = nation;
 
-                //update2.married = married;
-                //update2.children = editclass.children;
-                //update2.bank_account = account_number;
-                //update2.address = address;
+                _emp_Gen_InformationContext.Update(update);
+                await _emp_Gen_InformationContext.SaveChangesAsync();
+
+                update2.married = marry;
+                update2.children = editclass.children;
+                update2.bank_account = account_number;
+                update2.address = address;
+
+                _emp_Gen_InformationContext.Update(update2);
+                await _emp_Gen_InformationContext.SaveChangesAsync();
 
                 update3.sick_leave = sick;
                 update3.personal_leave = personalLeave;
                 update3.vacation_leave = vacationLeave;
 
+                _emp_Gen_InformationContext.Update(update3);
+                await _emp_Gen_InformationContext.SaveChangesAsync();
+
                 //update4.b.position = role;
-                //update4.b.start_work = time_start;
-                //update4.b.finish_work = time_end;
 
                 //update5.b.department_name = department;
 
-                _emp_Gen_InformationContext.Update(update);
-                //_emp_Gen_InformationContext.Update(update2);
-                _emp_Gen_InformationContext.Update(update3);
+
                 //_emp_Gen_InformationContext.Update(update4);
                 //_emp_Gen_InformationContext.Update(update5);
 
+
+                Console.WriteLine(update2);
                 await _emp_Gen_InformationContext.SaveChangesAsync();
                 await transaction.CommitAsync();
-                return Ok(update2);
+                return Ok(update);
 
             }
             catch (Exception ex)
