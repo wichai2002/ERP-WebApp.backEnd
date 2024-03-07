@@ -19,7 +19,8 @@ namespace Yinnaxs_BackEnd.Models
 		public string? phone { get; set; }
 		public string? resume_about_me { get; set; }
 		public string? resume_file { get; set; }
-		public string? status { get; set; }
+        public string? image_file { get; set; }
+        public string? status { get; set; }
 		public bool? accept { get; set; }
 		public DateTime? application_date { get; set; }
 		public string? education_1 { get; set; }

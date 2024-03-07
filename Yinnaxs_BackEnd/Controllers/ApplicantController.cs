@@ -64,6 +64,8 @@ namespace Yinnaxs_BackEnd.Controllers
 
             return CreatedAtAction(nameof(GetAll), new { id = applicant.applicant_id, applicant });
         }
+
+
     }
 }
 
