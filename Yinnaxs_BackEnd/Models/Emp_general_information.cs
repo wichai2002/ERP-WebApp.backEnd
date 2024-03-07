@@ -18,7 +18,6 @@ namespace Yinnaxs_BackEnd.Models
         public string? email { get; set; }
         public string? phone { get; set; }
 		public int role_id { get; set; }
-		public string? image_profile { get; set; }
 		public string? nationality { get; set; }
 		public bool emp_status { get; set; }
     }

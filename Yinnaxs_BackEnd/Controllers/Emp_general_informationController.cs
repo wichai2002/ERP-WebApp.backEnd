@@ -1,4 +1,5 @@
 ﻿using System;
+using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,17 +8,28 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Yinnaxs_BackEnd.Context;
 using Yinnaxs_BackEnd.Models;
+using Microsoft.AspNetCore.Http;
+using System.Diagnostics;
+using Newtonsoft.Json;
+using Org.BouncyCastle.Asn1.Ocsp;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace Yinnaxs_BackEnd.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class Emp_general_informationController : ControllerBase
     {
         private readonly ApplicationDbContext _emp_Gen_InformationContext;
+
+        public class EditObject
+        {
+            public int emp_gen_id { set; get; }
+            public string? first_name { set; get; }
+            public string? last_name { set; get; }
+        }
 
         public Emp_general_informationController(ApplicationDbContext emp_Gen_InformationContext)
         {
@@ -75,33 +87,48 @@ namespace Yinnaxs_BackEnd.Controllers
             return CreatedAtAction(nameof(GetAllEmp_gen_info), new { id = emp_General_Information.emp_gen_id, emp_General_Information });
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateEmp_gen_info(int id, Emp_general_information emp_General_Information)
+        //[HttpPut("{id}")]
+        //public async Task<IActionResult> UpdateEmp_gen_info(int id, Emp_general_information emp_General_Information)
+        //{
+        //    if (id != emp_General_Information.emp_gen_id)
+        //    {
+        //        return BadRequest();
+        //    }
+
+        //    _emp_Gen_InformationContext.Entry(emp_General_Information).State = EntityState.Modified;
+
+        //    try
+        //    {
+        //        await _emp_Gen_InformationContext.SaveChangesAsync();
+        //    }
+        //    catch (DbUpdateConcurrencyException)
+        //    {
+        //        if (!ExitEmp_gen_info(id))
+        //        {
+        //            return NotFound();
+        //        }
+        //        else
+        //        {
+        //            throw;
+        //        }
+        //    }
+
+        //    return NoContent();
+        //}
+
+
+        [HttpPut("/")]
+        public  IActionResult Update([FromBody] EditObject edit)
         {
-            if (id != emp_General_Information.emp_gen_id)
+
+            if (edit == null)
             {
                 return BadRequest();
             }
-
-            _emp_Gen_InformationContext.Entry(emp_General_Information).State = EntityState.Modified;
-
-            try
-            {
-                await _emp_Gen_InformationContext.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ExitEmp_gen_info(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            int id = edit.emp_gen_id;
+            Console.WriteLine(id);
+            Console.WriteLine(edit.first_name);
+            return Ok();
         }
 
         [HttpDelete("{id:int}")]
