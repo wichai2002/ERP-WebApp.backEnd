@@ -7,7 +7,7 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0-preview AS build
 WORKDIR /src
-COPY ["Yinnaxs_BackEnd/Yinnaxs_BackEnd.csproj", "Yinnaxs_BackEnd/"]
+COPY ["Yinnaxs_BackEnd.csproj", "Yinnaxs_BackEnd/"]
 RUN dotnet restore "Yinnaxs_BackEnd/Yinnaxs_BackEnd.csproj"
 COPY . .
 WORKDIR "/src/Yinnaxs_BackEnd"
