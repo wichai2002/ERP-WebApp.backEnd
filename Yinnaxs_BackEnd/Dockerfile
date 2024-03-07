@@ -2,14 +2,15 @@
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0-preview AS base
 WORKDIR /app
-EXPOSE 80
-EXPOSE 443
+EXPOSE 8080
+#EXPOSE 443
 
-FROM mcr.microsoft.com/dotnet/sdk:8.0-preview AS build
-WORKDIR /src
-COPY ["Yinnaxs_BackEnd/Yinnaxs_BackEnd.csproj", "Yinnaxs_BackEnd/"]
-RUN dotnet restore "Yinnaxs_BackEnd/Yinnaxs_BackEnd.csproj"
-COPY . .
+#FROM mcr.microsoft.com/dotnet/sdk:8.0-preview AS build
+#WORKDIR /src
+#COPY ["Yinnaxs_BackEnd/Yinnaxs_BackEnd.csproj", "Yinnaxs_BackEnd/"]
+#RUN dotnet restore "Yinnaxs_BackEnd/Yinnaxs_BackEnd.csproj"
+#COPY . .
+
 WORKDIR "/src/Yinnaxs_BackEnd"
 RUN dotnet build "Yinnaxs_BackEnd.csproj" -c Release -o /app/build
 
