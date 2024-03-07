@@ -1,8 +1,0 @@
-version: '3.4'
-
-services:
-  yinnaxs_backend:
-    image: ${DOCKER_REGISTRY-}yinnaxsbackend
-    build:
-      context: .
-      dockerfile: Yinnaxs_BackEnd/Dockerfile
