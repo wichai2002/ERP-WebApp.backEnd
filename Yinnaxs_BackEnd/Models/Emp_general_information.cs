@@ -20,5 +20,7 @@ namespace Yinnaxs_BackEnd.Models
 		public int role_id { get; set; }
 		public string? nationality { get; set; }
 		public bool emp_status { get; set; }
+        
+
     }
 }
