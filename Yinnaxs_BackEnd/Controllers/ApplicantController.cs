@@ -3,9 +3,6 @@ using System.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-// AWS packages
-using Amazon.S3;
-
 // project packages
 using Yinnaxs_BackEnd.Context;
 using Yinnaxs_BackEnd.Models;

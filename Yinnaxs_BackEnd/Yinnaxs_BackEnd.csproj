@@ -4,12 +4,13 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <InvariantGlobalization>true</InvariantGlobalization>
+    <DockerComposeProjectPath>../docker-compose.dcproj</DockerComposeProjectPath>
+    <UserSecretsId>b7971183-f4ba-43ad-a0c1-1451bf28f279</UserSecretsId>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'https' " />
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'http' " />
   <ItemGroup>
-    <PackageReference Include="MongoDB.Driver" Version="2.24.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.1">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -24,9 +25,6 @@
     <PackageReference Include="MailKit" Version="4.3.0" />
     <PackageReference Include="NETCore.MailKit" Version="2.1.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="AWSSDK.S3" Version="3.7.305.30" />
-    <PackageReference Include="AWSSDK.Extensions.NETCore.Setup" Version="3.7.300" />
-    <PackageReference Include="AWSSDK.SecurityToken" Version="3.7.300.55" />
   </ItemGroup>
 
   <ItemGroup>
