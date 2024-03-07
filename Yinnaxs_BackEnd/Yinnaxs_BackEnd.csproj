@@ -33,12 +33,10 @@
     <None Remove="Context\" />
     <None Remove="Utility\" />
     <None Remove="Utility\assets\" />
-    <None Remove="AWS_services\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Context\" />
     <Folder Include="Utility\" />
     <Folder Include="Utility\assets\" />
-    <Folder Include="AWS_services\" />
   </ItemGroup>
 </Project>
