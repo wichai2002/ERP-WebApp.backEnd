@@ -47,6 +47,7 @@ namespace Yinnaxs_BackEnd.Controllers
             var apllicant = await _applicant_Context.Applicants.Select(app => new
             {
                 applicant_id = app.applicant_id,
+                resume_file = app.resume_file,
                 first_name = app.first_name,
                 last_name = app.last_name,
                 application_date = app.application_date,
