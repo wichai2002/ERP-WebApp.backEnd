@@ -1,8 +1,13 @@
         stage('Clear Docker Components') {
             steps {
                 script {
+                
                     def count = sh(script: "docker ps | grep imagename | wc -l", returnStdout: true).trim()
                     echo count
+
+                    if (count == 0){
+                        echo "big"
+                    }
                 }
             }
         }
