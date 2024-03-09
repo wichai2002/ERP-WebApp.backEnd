@@ -8,7 +8,7 @@ using Yinnaxs_BackEnd.Models;
 
 namespace Yinnaxs_BackEnd.Controllers
 {
-    [Authorize]
+   // [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class RoleController : Controller
