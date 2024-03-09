@@ -13,7 +13,6 @@ namespace Yinnaxs_BackEnd.Models
 		public int department_id { get; set; }
 		public string? start_work { get; set; }
 		public string? finish_work { get; set; }
-        public string role { get; set; }
     }
 }
 
