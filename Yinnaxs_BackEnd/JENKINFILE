@@ -7,7 +7,7 @@ pipeline {
                 
                     def count = sh(script: "docker ps | grep imagename | wc -l", returnStdout: true).trim()
                     def num = "$count" as Integer
-                    if (num.compareTo(0)){
+                    if (num <= 0){
                         echo count
                         echo "big"
                     }
