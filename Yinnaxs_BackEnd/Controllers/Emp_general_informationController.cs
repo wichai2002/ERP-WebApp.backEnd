@@ -12,7 +12,7 @@ using Yinnaxs_BackEnd.Models;
 
 namespace Yinnaxs_BackEnd.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class Emp_general_informationController : ControllerBase
