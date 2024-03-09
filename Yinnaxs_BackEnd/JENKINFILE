@@ -1,4 +1,7 @@
-        stage('Clear Docker Components') {
+pipeline {
+    agent any
+
+            stage('Clear Docker Components') {
             steps {
                 script {
                 
@@ -11,3 +14,4 @@
                 }
             }
         }
+}
