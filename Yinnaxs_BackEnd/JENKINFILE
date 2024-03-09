@@ -9,7 +9,7 @@ pipeline {
                     echo count
 
                     if (count == 0){
-                        echo "big"
+                        echo count+1
                     }
                 }
             }
