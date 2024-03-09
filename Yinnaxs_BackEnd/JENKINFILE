@@ -46,6 +46,7 @@ pipeline {
 
                     def count = sh(script: "docker ps | grep imagename | wc -l", returnStdout: true).trim()
                     def num = "$count" as Integer
+                    echo num
                     if (num != 0){
                         echo 'DELETE ALL'
                         // Remove Docker images and containers
