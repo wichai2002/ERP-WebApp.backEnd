@@ -43,22 +43,11 @@ pipeline {
         stage('Clear Docker Components') {
             steps {
                 script {
-
-                    def count = sh(script: "docker ps | grep imagename | wc -l", returnStdout: true).trim()
-                    def num = "$count" as Integer
-                    echo num
-                    if (num != 0){
-                        echo 'DELETE ALL'
-                        // Remove Docker images and containers
-                        sh 'docker stop $(docker ps -a -q)'  
-                        sh  'docker rm $(docker ps -a -q)' 
-                        sh  'docker rmi $(docker images -q)'
-                        sh 'docker system prune -af'
-
-                        echo 'No Docker Image available on this machine DELETED ALL'
-                    }else{
-                        echo 'No Docker Image available on this machine'
-                    }
+                    // Remove Docker images and containers
+                    sh 'docker stop $(docker ps -a -q)'  
+                    sh 'docker rm $(docker ps -a -q)' 
+                    sh 'docker rmi $(docker images -q)'
+                    sh 'docker system prune -af'
                 }
             }
         }
