@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Yinnaxs_BackEnd.Controllers
 {
-    [Authorize]
+    // [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class AppoinmentController : Controller
