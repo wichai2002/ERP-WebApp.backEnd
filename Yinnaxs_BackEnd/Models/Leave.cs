@@ -13,6 +13,7 @@ namespace Yinnaxs_BackEnd.Models
         public string type { get; set; }
 
         public int status {  get; set; }
+        public int check_ed { get; set; }
         public DateTime start_leave { get; set; }
         public DateTime end_leave { get; set;}
         public int year { get; set; }
