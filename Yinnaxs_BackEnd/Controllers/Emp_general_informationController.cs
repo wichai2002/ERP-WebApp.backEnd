@@ -37,7 +37,7 @@ namespace Yinnaxs_BackEnd.Controllers
             public int vacationleave { get; set; }
             public string? time_start { get; set; }
             public string? time_end { get; set; }
-        }    
+        }
 
         private readonly ApplicationDbContext _emp_Gen_InformationContext;
 
@@ -90,17 +90,17 @@ namespace Yinnaxs_BackEnd.Controllers
             var emp_gen_info = await _emp_Gen_InformationContext.Emp_General_Information.Join(_emp_Gen_InformationContext.Roles,
                 a => a.role_id,
                 b => b.role_id,
-                (emp,role) => new
+                (emp, role) => new
                 {
                     emp_id = emp.emp_gen_id,
-                    fullname = emp.first_name + " "+ emp.last_name,
-                    email = emp.email,  
+                    fullname = emp.first_name + " " + emp.last_name,
+                    email = emp.email,
                     role_name = role.position,
                     status = emp.emp_status
                 }).Join(_emp_Gen_InformationContext.Emp_Personal_Informaion,
                 a => a.emp_id,
                 b => b.emp_gen_id,
-                (emp,per) => new 
+                (emp, per) => new
                 {
                     emp_id = per.emp_gen_id,
                     fullname = emp.fullname,
@@ -128,10 +128,22 @@ namespace Yinnaxs_BackEnd.Controllers
                         email = _gen.email,
                         role_id = _gen.role_id,
                         hire_date = _per.hire_date,
-                        department_id = 0
                     }
-                 ).ToListAsync();
+                 ).Join(_emp_Gen_InformationContext.Roles,
+                a => a.role_id,
+                b => b.role_id,
+                (_gen, role) => new
+                {
+                    emp_gen_id = _gen.emp_gen_id,
+                    first_name = _gen.first_name,
+                    last_name = _gen.last_name,
+                    email = _gen.email,
+                    role_id = _gen.role_id,
+                    hire_date = _gen.hire_date,
+                    department_id = role.department_id
+                }).ToListAsync();
 
+            Console.WriteLine("LOG THIS LINE");
             return Ok(listResutlt);
         }
 
@@ -160,7 +172,7 @@ namespace Yinnaxs_BackEnd.Controllers
 
 
         [HttpPut("/")]
-        public  IActionResult Update([FromBody] EditObject edit)
+        public IActionResult Update([FromBody] EditObject edit)
         {
 
             if (edit == null)
@@ -204,7 +216,7 @@ namespace Yinnaxs_BackEnd.Controllers
                 .Join(_emp_Gen_InformationContext.Roles,
                 a => a.role_id,
                 b => b.role_id,
-                (info,role) => new
+                (info, role) => new
                 {
                     roleId = info.role_id,
                     phone = info.phone,
@@ -215,14 +227,14 @@ namespace Yinnaxs_BackEnd.Controllers
                 .Join(_emp_Gen_InformationContext.Departments,
                 a => a.departmentId,
                 b => b.department_id,
-                (info,depart) => new
+                (info, depart) => new
                 {
                     departmentName = depart.department_name,
                     roleName = info.position,
                     phone = info.phone,
                     nation = info.nationality
                 }).ToListAsync();
-                
+
 
 
 
@@ -231,7 +243,7 @@ namespace Yinnaxs_BackEnd.Controllers
                 Join(_emp_Gen_InformationContext.Emp_Personal_Informaion,
                 a => a.emp_gen_id,
                 b => b.emp_gen_id,
-                (emp,per) => new
+                (emp, per) => new
                 {
                     emp_id = emp.emp_gen_id,
                     roleId = emp.role_id,
@@ -246,7 +258,7 @@ namespace Yinnaxs_BackEnd.Controllers
                 }).Join(_emp_Gen_InformationContext.Roles,
                 a => a.roleId,
                 b => b.role_id,
-                (one,two) => new 
+                (one, two) => new
                 {
                     first_name = one.first_name,
                     last_name = one.last_name,
@@ -256,7 +268,7 @@ namespace Yinnaxs_BackEnd.Controllers
                     email = one.email,
                     address = one.address,
                     hire_date = one.hire_date,
-                    start_time = two.start_work.Replace(".",":").PadLeft(5, '0'),
+                    start_time = two.start_work.Replace(".", ":").PadLeft(5, '0'),
                     end_time = two.finish_work.Replace(".", ":").PadLeft(5, '0')
                 }).ToListAsync();
 
@@ -265,7 +277,7 @@ namespace Yinnaxs_BackEnd.Controllers
                 .Join(_emp_Gen_InformationContext.Emp_Personal_Informaion,
                 a => a.emp_gen_id,
                 b => b.emp_gen_id,
-                (info,per) => new
+                (info, per) => new
                 {
                     empId = info.emp_gen_id,
                     married = per.married,
@@ -276,7 +288,7 @@ namespace Yinnaxs_BackEnd.Controllers
                 }).Join(_emp_Gen_InformationContext.Educations,
                 a => a.empId,
                 b => b.emp_gen_id,
-                (one,two) => new
+                (one, two) => new
                 {
                     married = one.married,
                     children = one.children,
@@ -292,7 +304,7 @@ namespace Yinnaxs_BackEnd.Controllers
             //table 4
             var emp_gen_info_four = await _emp_Gen_InformationContext.Leavedays.Where(a => a.emp_gen_id == id).ToListAsync();
 
-            return Ok(new {employee_if = emp_gen_info_one,main_info = emp_gen_info_two,other_info = emp_gen_info_three,leave_day=emp_gen_info_four});
+            return Ok(new { employee_if = emp_gen_info_one, main_info = emp_gen_info_two, other_info = emp_gen_info_three, leave_day = emp_gen_info_four });
         }
 
 
@@ -356,7 +368,7 @@ namespace Yinnaxs_BackEnd.Controllers
                 int vacationLeave = editclass.vacationleave;
                 string time_start = editclass.time_start;
                 string time_end = editclass.time_end;
-                
+
                 if (editclass.children == null)
                 {
                     editclass.children = 0;
