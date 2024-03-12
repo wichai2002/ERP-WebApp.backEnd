@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -47,7 +47,7 @@ namespace Yinnaxs_BackEnd.Controllers
                 gen => gen._gen.role_id,
                 per => per.role_id,
                 (_table1, _table2) => new { role_name = _table2.position, _table1._gen, _table1._per }
-                ).Where(a => a._per.status == 0).ToListAsync();
+                ).Where(a => a._per.check_ed == 0).ToListAsync();
 
             foreach (var item in listResult)
             {
@@ -132,14 +132,18 @@ namespace Yinnaxs_BackEnd.Controllers
 
                 var change_status = await _leave.Leaves.Where(a => a.leave_req_number == rid).FirstOrDefaultAsync();
 
+
+                Console.WriteLine(num);
+
                 if (num == 1)
                 {
                     change_status.status = 1;
+                    change_status.check_ed = 1;
                     _leave.Update(change_status);
                 }
                 else
                 {
-                    change_status.status = 2;
+                    change_status.check_ed = 1;
                     _leave.Update(change_status);
                 }
 
@@ -177,11 +181,6 @@ namespace Yinnaxs_BackEnd.Controllers
                     }
                     _leave.Update(calulation_Leave);
                 };
-
-
-
-
-
 
 
                 await _leave.SaveChangesAsync();
