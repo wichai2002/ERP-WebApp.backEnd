@@ -43,7 +43,6 @@ pipeline {
         stage('Clear Docker Components') {
             steps {
                 script {
-
                     def count = sh(script: "docker ps | grep imagename | wc -l", returnStdout: true).trim()
                     def num = "$count" as Integer
                     if (num > 0){

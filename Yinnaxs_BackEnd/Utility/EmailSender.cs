@@ -27,7 +27,6 @@ namespace Yinnaxs_BackEnd.Utility
 
         public bool sendEmail_Invite_Interview_To_Applicant(string senderName, string receiverName, string receiverEmail, string role, DateTime date, string time)
         {
-            receiverEmail = "64070230@kmitl.ac.th";
             try
             {
                 email.From.Add(new MailboxAddress(senderName, "kommongkhun.2002@gmail.com"));
@@ -57,7 +56,6 @@ namespace Yinnaxs_BackEnd.Utility
 
         public bool sendEmail_Accept_Applicant(string senderName, string receiverName, string receiverEmail, string role, DateTime hire_date, bool aceept)
         {
-            receiverEmail = "64070230@kmitl.ac.th";
 
             try
             {
